@@ -1,4 +1,3 @@
-Moderna,13,2021−01−6
 Tel_Aviv,40
 Jerusalem,100
 Ramat_Gan,40

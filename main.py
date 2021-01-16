@@ -22,7 +22,7 @@ def init_tables(config_dir):
     for x in range(numOFVaccines):
         currLine = dirs.readline()
         arrCurrVacc = currLine.split(',')
-        currVacc = DTO.Vaccine(arrCurrVacc[1], arrCurrVacc[2], arrCurrVacc[3])
+        currVacc = DTO.Vaccine(0, arrCurrVacc[1], arrCurrVacc[2], arrCurrVacc[3])
         repo.vaccines.insert(currVacc)         
     
     for x in range(numOfSuppliers):
@@ -52,6 +52,9 @@ def init_order(order_dir):
         length = len(arrCurrOrder)
         if length == 3:
             repo.receive_shipment(arrCurrOrder)
+        if length == 2:
+            repo.send_shipment(arrCurrOrder)
+
 
 if __name__== '__main__':
     main()

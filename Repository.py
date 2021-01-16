@@ -49,14 +49,14 @@ class _Repository:
     
     def receive_shipment(self, arrOfCurrOrder):
         supplier = self.suppliers.findByName(arrOfCurrOrder[0])       
-        vaccToAdd = DTO.Vaccine(arrOfCurrOrder[2], supplier[0], arrOfCurrOrder[1])
+        vaccToAdd = DTO.Vaccine(0, arrOfCurrOrder[2], supplier[0], arrOfCurrOrder[1])
         self.vaccines.insert(vaccToAdd)
         logistic = self.logistics.findByID(supplier[2])
         self.logistics.updateReceivedCount(logistic[0], arrOfCurrOrder[1])
         self._conn.commit()
 
     def send_shipment(self, arrOfCurrOrder):
-        amount = arrOfCurrOrder[1]
+        amount = int(arrOfCurrOrder[1])
         while amount > 0:
             vaccine = self.vaccines.getVaccineToSend()
             if vaccine is None:
@@ -68,7 +68,7 @@ class _Repository:
             else:
                 self.vaccines.updateQuantity(vaccine.id, amount)                
                 amount = 0
-        supplied = arrOfCurrOrder[1] - amount
+        supplied = int(arrOfCurrOrder[1]) - amount
         clinic = self.clinics.findByLocation(arrOfCurrOrder[0])
         self.clinics.updateDemand(clinic[0], supplied)
         logistic = self.logistics.findByID(clinic[3])

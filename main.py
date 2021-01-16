@@ -9,6 +9,7 @@ import imp
 def main():
     init_tables(sys.argv[1]) 
     init_order(sys.argv[2])
+    sys.exit()
 
 def init_tables(config_dir):
     repo.create_tables()
@@ -44,8 +45,9 @@ def init_tables(config_dir):
         repo.logistics.insert(currLogs) 
         
     repo._conn.commit()
+    dirs.close()
 
-def init_order(order_dir):
+def init_order(order_dir):    
     dirs = open(order_dir, "r")
     for row in dirs:
         arrCurrOrder = row.split(',')
@@ -54,7 +56,14 @@ def init_order(order_dir):
             repo.receive_shipment(arrCurrOrder)
         if length == 2:
             repo.send_shipment(arrCurrOrder)
+        updateOutput()
 
+def updateOutput():
+    outputLine = [repo.vaccines.totalInventory()[0], repo.clinics.totalDemand()[0], repo.logistics.totalReceived()[0], repo.logistics.totalSent()[0]]
+    dirs = open(sys.argv[3], "a")
+    toWrite = ','.join(map(str, outputLine))
+    dirs.write(toWrite + '\n')
+    dirs.close()
 
 if __name__== '__main__':
     main()

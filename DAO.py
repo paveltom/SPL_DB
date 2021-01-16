@@ -23,7 +23,7 @@ class _Vaccines:
         c.execute("""
                 SELECT * FROM vaccines ORDER BY(date) ASC 
         """)
-        return Vaccine(*c.fetchone())
+        return DTO.Vaccine(*c.fetchone())
 
     def deleteVacc(self, vacc_id):    
         self._conn.execute("""
@@ -34,7 +34,13 @@ class _Vaccines:
         self._conn.execute("""
                 UPDATE vaccines SET quantity=(quantity-(?)) WHERE id = ? 
         """, [amountToReduce, vacc_id])
-    
+
+    def totalInventory(self):
+        c = self._conn.cursor()
+        c.execute("""
+                SELECT SUM(quantity) FROM vaccines
+        """)
+        return c.fetchone()    
     
 class _Suppliers:
     def __init__(self, conn):
@@ -89,6 +95,13 @@ class _Clinics:
                UPDATE clinics SET demand=(demand-(?)) WHERE clinics.id=(?)
            """, [amount, clinic_id])
 
+    def totalDemand(self):
+        c = self._conn.cursor()
+        c.execute("""
+                SELECT SUM(demand) FROM clinics
+        """)
+        return c.fetchone()
+
       
       
 class _Logistics:
@@ -122,3 +135,17 @@ class _Logistics:
         self._conn.execute("""
                UPDATE logistics SET count_sent=(count_sent+(?)) WHERE logistics.id=(?)
            """, [supplied, logistic_id])
+
+    def totalReceived(self):
+        c = self._conn.cursor()
+        c.execute("""
+                SELECT SUM(count_received) FROM logistics
+        """)
+        return c.fetchone()
+
+    def totalSent(self):
+        c = self._conn.cursor()
+        c.execute("""
+                SELECT SUM(count_sent) FROM logistics
+        """)
+        return c.fetchone()

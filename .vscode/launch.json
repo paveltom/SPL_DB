@@ -13,7 +13,7 @@
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "args": [
-                "config.txt","orders.txt"
+                "config.txt","orders.txt","output.txt"
             ]
         }
     ]
